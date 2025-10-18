@@ -1,8 +1,35 @@
 [package]
-name = "algotrade"
+name = "beaumont"
 version = "0.1.0"
+license = "WTFPL"
+authors = [
+    "Paolo Angioletti <paolo.angioletti@gmail.com>"
+]
 edition = "2024"
-authors = ["Paolo Angioletti <paolo.angioletti@gmail.com>"]
-description = "Algorithmic trading for financial applications"
+description = "Algorithmic trading for quantitative financial applications"
+repository = "https://github.com/pangiole/beaumont"
+keywords = [
+    "trading",
+    "finance",
+    "quantitative",
+    "algorithmic",
+    "pricing"
+]
+categories = [
+    "finance",
+    "algorithms",
+    "mathematics"
+]
+exclude = [
+    "src/main.rs",
+    "src/linalg.rs",
+    "src/num/ops.rs",
+    "src/num/ops/*",
+    "src/num/scaling.rs",
+]
 
 [dependencies]
+
+[package.metadata.docs.rs]
+rustdoc-args = [ "--html-in-header", "./katex.html" ]
+
