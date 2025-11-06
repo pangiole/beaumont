@@ -23,9 +23,8 @@ categories = [
 exclude = [
     "src/main.rs",
     "src/linalg.rs",
-    "src/num/ops.rs",
-    "src/num/ops/*",
-    "src/num/scaling.rs",
+    "src/num/ops/add.rs",
+    "src/num/ops/mul.rs"
 ]
 
 [dependencies]

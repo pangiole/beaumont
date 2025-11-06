@@ -1,43 +1,5 @@
-use super::{Decimal, Error, MAX_SCALING};
+use super::{Decimal, Error};
 use std::str::FromStr;
-
-impl Decimal {
-    /// Same as the [`Decimal::try_new`] function, but it panics instead of resulting [`Error`]
-    pub fn new(coefficient: i32, scaling: u8) -> Self {
-        Self::
-            try_new(coefficient, scaling)
-            .unwrap_or_else(|err| panic!("{}", err))
-    }
-
-    /// Attempt to create a new decimal number (without panicking).
-    ///
-    /// # Parameters
-    /// * `coefficient` - A signed coefficient integer
-    /// * `scaling` - A positive scaling factor
-    ///
-    /// # Returns
-    /// An [`Ok`] result wrapping a new decimal number or one of the following:
-    /// * [`Error::ScalingOverflow`]<br>
-    ///   If the given scaling factor exceeds [`MAX_SCALING`]
-    ///
-    /// # Examples
-    /// ```rust
-    /// # use beaumont::num::{Decimal, Error, MAX_SCALING};
-    /// let d1 = Decimal::try_new(123456, 2);
-    /// assert_eq!(d1.unwrap().to_string(), "1234.56");
-    ///
-    /// let d2 = Decimal::try_new(123456, MAX_SCALING + 1);
-    /// assert!(d2.is_err());
-    /// assert!(matches!(d2.unwrap_err(), Error::ScalingOverflow));
-    /// ```
-    pub fn try_new(coefficient: i32, scaling: u8) -> Result<Self, Error> {
-        if scaling > MAX_SCALING {
-            return Err(Error::ScalingOverflow);
-        }
-        Ok(Self { coefficient, scaling })
-    }
-}
-
 
 impl FromStr for Decimal {
     type Err = Error;
@@ -57,17 +19,16 @@ impl FromStr for Decimal {
         let mut dot_encountered = false;
         let mut maybe_error: Option<Error> = None;
 
-        for i in 0..len {
-            let c = chars[i];
+        for (i, c) in chars.iter().enumerate().take(len) {
 
             // 43 is the ASCII code for the character '+'
             // and it is allowed only once (at the beginning of the given string)
-            if c == 43 && i > 0 {
+            if *c == 43 && i > 0 {
                 maybe_error = Some(Error::BadFormat("Misplaced + (plus)")); break;
             }
 
             // 45 is the ASCII code for the character '-'
-            else if c == 45 {
+            else if *c == 45 {
                 if i > 0 {
                     maybe_error = Some(Error::BadFormat("Misplaced - (minus)")); break;
                 }
@@ -75,7 +36,7 @@ impl FromStr for Decimal {
             }
 
             // 46 is the ASCII code for the character '.'
-            else if c == 46 {
+            else if *c == 46 {
                 if dot_encountered {
                     // double dot encountered!
                     maybe_error = Some(Error::BadFormat("Double . (dot)"));
@@ -85,7 +46,7 @@ impl FromStr for Decimal {
             }
 
             // 48 is the ASCII code for the character '0'
-            else if c >= 48 && c <= 59 {
+            else if (48..=59).contains(c) {
                 //
                 // Update the coefficient by multiplying it by 10 and then adding (or subtracting)
                 // the current character digit
@@ -102,10 +63,10 @@ impl FromStr for Decimal {
                             else                  { x.checked_sub((c - 48) as i32) }
                         );
 
-                if checked_coefficient.is_some() {
-                    accumulated_coefficient = checked_coefficient.unwrap();
+                if let Some(c) = checked_coefficient {
+                    accumulated_coefficient = c;
                     if dot_encountered {
-                        accumulated_scaling = accumulated_scaling + 1;
+                        accumulated_scaling += 1;
                     }
                 }
                 else {
@@ -121,11 +82,12 @@ impl FromStr for Decimal {
         }
 
         // Finally, check if we encountered an error and return the result accordingly
-        maybe_error
-            .map_or_else(
-                || Self::try_new(accumulated_coefficient, accumulated_scaling),
-                |error| Err(error)
-            )
+        if let Some(error) = maybe_error {
+            Err(error)
+        }
+        else {
+            Self::try_new(accumulated_coefficient, accumulated_scaling)
+        }
     }
 }
 
@@ -133,8 +95,8 @@ impl FromStr for Decimal {
 
 #[cfg(test)]
 mod test {
-    use crate::num::MIN_COEFFICIENT;
     use super::*;
+    use crate::num::{MIN_COEFFICIENT, MAX_SCALING};
 
     #[test]
     fn new() {

@@ -86,7 +86,7 @@ impl fmt::Display for Decimal {
         // Helper function that shifts the content of the buffer to the left, the given number
         // of times, up to the given position (included), and fills the remaining space with the
         // given fill ASCII character.
-        fn shift_left(buf: &mut [u8], times: u8, pos: usize, fill: u8) -> () {
+        fn shift_left(buf: &mut [u8], times: u8, pos: usize, fill: u8) {
             // TODO check if this is the most efficient way to shift the buffer left
             //      as we may not need to copy the whole buffer
             //      and we may not need to loop the given number of times
@@ -94,7 +94,7 @@ impl fmt::Display for Decimal {
                 let mut i = 0;
                 while i < pos {
                     buf[i] = buf[i + 1];
-                    i = i + 1;
+                    i += 1;
                 }
                 buf[pos] = fill;
             }
@@ -114,17 +114,17 @@ impl fmt::Display for Decimal {
                 q = c / 100;
                 i = (c - q * 100) as usize; // it's the same as (c % 100);
                 // Decrement the position and insert the digits of how may ones and tens
-                pos = pos - 1; buf[pos] = ones_digit(i);
-                pos = pos - 1; buf[pos] = tens_digit(i);
+                pos -= 1; buf[pos] = ones_digit(i);
+                pos -= 1; buf[pos] = tens_digit(i);
                 // It updates the coefficient being represented and loops over ...
                 c = q;
             }
             // ... until the remaining coefficient is less than 100.
             i = c as usize;
             // Decrement the position and insert the digits of how may ones (and maybe tens)
-            pos = pos - 1; buf[pos] = ones_digit(i);
+            pos -= 1; buf[pos] = ones_digit(i);
             if i >= 10 {
-                pos = pos - 1; buf[pos] = tens_digit(i);
+                pos -= 1; buf[pos] = tens_digit(i);
             }
 
             // Finally, return the digit count
