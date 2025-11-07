@@ -1,4 +1,4 @@
-use crate::num::{Decimal, Error, RoundingMode};
+use crate::{Decimal, Error, RoundingMode};
 
 impl Decimal {
 
@@ -14,7 +14,7 @@ impl Decimal {
     ///
     /// # Examples
     /// ```
-    /// # use beaumont::num::{Decimal};
+    /// # use beaumont_numbers::{Decimal};
     /// let d1 = Decimal::new(100, 2); // Represents 1.00
     /// let d2 = Decimal::new(500, 2); // Represents 5.00
     /// let d3 = Decimal::new(100, 3); // Represents 0.100
@@ -50,7 +50,7 @@ impl Decimal {
     ///
     /// # Examples
     /// ```rust
-    /// # use beaumont::num::{Decimal, Error, MAX_SCALING, RoundingMode};
+    /// # use beaumont_numbers::{Decimal, Error, MAX_SCALING, RoundingMode};
     /// let d = Decimal::new(123591, 3); // Represents "123.591"
     ///
     /// // Happy upscaling (add more trailing zeroes)
@@ -109,7 +109,7 @@ impl Decimal {
     ///
     /// # Examples
     /// ```rust
-    /// # use beaumont::num::{Decimal, Error, MAX_SCALING, RoundingMode};
+    /// # use beaumont_numbers::{Decimal, Error, MAX_SCALING, RoundingMode};
     /// let d1 = Decimal::new(123591, 3); // Represents "123.591"
     /// let rm = RoundingMode::HalfUp;
     ///
@@ -170,7 +170,7 @@ impl Decimal {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::num::{MIN_COEFFICIENT, MAX_SCALING};
+    use crate::{MIN_COEFFICIENT, MAX_SCALING};
 
     const RM: RoundingMode = RoundingMode::HalfUp;
 

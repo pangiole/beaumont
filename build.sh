@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+readonly script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
 function step {
@@ -11,6 +12,12 @@ function step {
 }
 
 rustup update
+
+step "CLEANING"
+cargo install cargo-cache
+cargo cache --autoclean
+cargo clean
+
 
 step "LINTING"
 rustup component add clippy
@@ -25,7 +32,7 @@ cargo llvm-cov # --text # --html
 
 step "BUILDING DOCS "
 cargo test --doc -- --show-output
-RUSTDOCFLAGS="--html-in-header ./katex.html" cargo doc --verbose
+RUSTDOCFLAGS="--html-in-header $script_dir/katex.html" cargo doc --verbose
 
 
 step "BUILDING RELEASE"

@@ -1,34 +1,8 @@
-[package]
-name = "beaumont"
-version = "0.1.0"
-license = "WTFPL"
-authors = [
-    "Paolo Angioletti <paolo.angioletti@gmail.com>"
+[workspace]
+resolver = "3"
+members = [
+    "macros",
+    "numbers",
+    # TODO "linalg"
+    "beaumont"
 ]
-edition = "2024"
-description = "Algorithmic trading for quantitative financial applications"
-repository = "https://github.com/pangiole/beaumont"
-keywords = [
-    "trading",
-    "finance",
-    "quantitative",
-    "algorithmic",
-    "pricing"
-]
-categories = [
-    "finance",
-    "algorithms",
-    "mathematics"
-]
-exclude = [
-    "src/main.rs",
-    "src/linalg.rs",
-    "src/num/ops/add.rs",
-    "src/num/ops/mul.rs"
-]
-
-[dependencies]
-
-[package.metadata.docs.rs]
-rustdoc-args = [ "--html-in-header", "./katex.html" ]
-

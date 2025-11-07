@@ -1,5 +1,5 @@
 use std::ops::Neg;
-use crate::num::{Decimal, RoundingMode};
+use crate::{Decimal, RoundingMode};
 
 
 impl Decimal {
@@ -10,7 +10,7 @@ impl Decimal {
     ///
     /// # Examples
     /// ```rust
-    /// # use beaumont::num::{Decimal, MIN_COEFFICIENT};
+    /// # use beaumont_numbers::{Decimal, MIN_COEFFICIENT};
     /// let d1 = Decimal::new(123, 2);
     /// let n1 = d1.checked_neg();
     /// assert!(n1.is_some());
@@ -41,7 +41,7 @@ impl Decimal {
     ///
     /// # Examples
     /// ```rust
-    /// # use beaumont::num::{Decimal, RoundingMode};
+    /// # use beaumont_numbers::{Decimal, RoundingMode};
     /// let d = "-21474836.48".parse::<Decimal>().unwrap();
     /// assert!(d.checked_neg().is_none()); // Overflowed
     ///
@@ -79,7 +79,7 @@ impl Neg for Decimal {
 
 #[cfg(test)]
 mod test {
-    use crate::num::MIN_COEFFICIENT;
+    use crate::MIN_COEFFICIENT;
     use super::*;
 
     #[test]

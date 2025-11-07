@@ -1,6 +1,28 @@
 use super::{Decimal, Error};
 use std::str::FromStr;
 
+
+impl From<i32> for Decimal {
+    fn from(int: i32) -> Self {
+        Self::new(int, 0)
+    }
+}
+
+impl From<f32> for Decimal {
+    fn from(_float: f32) -> Self {
+        // TODO Implement the ability to create a decimal number from a float
+        Self::new(0, 0)
+    }
+}
+
+impl From<&str> for Decimal {
+    fn from(value: &str) -> Self {
+        value.parse::<Decimal>().unwrap()
+    }
+}
+
+
+
 impl FromStr for Decimal {
     type Err = Error;
 
@@ -96,7 +118,7 @@ impl FromStr for Decimal {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::num::{MIN_COEFFICIENT, MAX_SCALING};
+    use crate::{MIN_COEFFICIENT, MAX_SCALING};
 
     #[test]
     fn new() {
@@ -109,6 +131,21 @@ mod test {
     #[should_panic]
     fn new_panic() {
         Decimal::new(123456, MAX_SCALING + 1);
+    }
+
+    #[test]
+    fn from_i32() {
+        let decimal = Decimal::from(123456);
+        assert_eq!(decimal.coefficient, 123456);
+        assert_eq!(decimal.scaling, 0);
+    }
+
+    #[test]
+    #[ignore]
+    fn from_f32() {
+        let decimal = Decimal::from(123456.789);
+        assert_eq!(decimal.coefficient, 123456789);
+        assert_eq!(decimal.scaling, 6);
     }
 
     #[test]

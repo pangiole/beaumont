@@ -1,7 +1,9 @@
+#![deny(missing_docs)]
+
 //! A basic implementation of decimal numbers in fixed-point arithmetic.
 //!
-//! <div class="warning">This module is in an early stage of development and definitively
-//! <strong>not</strong> production ready.<br>Use with caution!</div>
+//! <div class="warning">This crate is in an early stage of development and
+//! <strong>not</strong> production ready yet.<br>Use with caution!</div>
 //!
 //! # Representation
 //! Decimal numbers are internally represented by a signed coefficient integer and a positive
@@ -12,28 +14,45 @@
 //! coefficient * 10 ^{-scaling}
 //! $$
 //!
-//! For example, the decimal number `1234.56` is internally represented as `123456` (the coefficient)
-//! and `2` (the scaling factor).
+//! For example, the decimal number `1234.56d` is internally represented as $123456 * 10^{-2}$.
 //!
 //! # Usage
 //! To create a decimal number, you can:
-//! - invoke [`Decimal::new`] and pass in both the `coefficient` integer and the `scaling` factor,
-//! - or invoke the [`str::parse`] method on a string to have it parsed as [`Decimal`] type
+//! - use custom literals, such as `1234.56d` or `"-234.00"d`,
+//! - invoke the [`Decimal::from`] converter functions
+//! - invoke the [`Decimal::new`] factory function
 //!
 //! ```rust
-//! use beaumont::num::Decimal;
+//! use beaumont_numbers::*;
+//! use beaumont_macros::*;
 //!
-//! let d1 = Decimal::new(123456, 2);
-//! let d2 = "1234.567".parse::<Decimal>().unwrap();
+//! // Annotate your function with the beaumont macros
+//! #[beaumont_literals]
+//! fn do_something() {
+//!     // Create decimal numbers from custom literals
+//!     let d1 = 12d;                         // d suffix
+//!     let d2 = -56712.3489d;
+//!     let d3 = "19.092801"d;
+//!
+//!     // Or invoke converter functions
+//!     let d4 = Decimal::from(12);           // integer
+//!     let d5 = Decimal::from(-56712.3489);  // float
+//!     let d6 = Decimal::from("19.092801");  // string
+//!
+//!     // Or invoke factory functions
+//!     let d7 = Decimal::new(12, 0);         // coefficient, scaling
+//!     let d8 = Decimal::new(567123489, 4);
+//!     let d9 = Decimal::new(19092801, 6);
+//! }
 //! ```
+//!
 //! Once created, you can apply mathematical operations such as negating, adding, multiplying, etc.
 //!
 //! ```rust
-//! # use beaumont::num::Decimal;
-//! # let d1 = Decimal::new(123456, 2);
-//! # let d2 = Decimal::new(1234567, 3);
-//! let negated = -d1;
-//! assert_eq!(negated.to_string(), "-1234.56");
+//! # use beaumont_numbers::Decimal;
+//! # let d2 = Decimal::new(-567123489, 4);
+//! let negated = -d2;
+//! assert_eq!(negated.to_string(), "56712.3489");
 //! ```
 //!
 //! # Memory
@@ -43,7 +62,7 @@
 //! - and provided with copy semantics (instead of move semantics).
 //!
 //! ```rust
-//! use beaumont::num::Decimal;
+//! use beaumont_numbers::Decimal;
 //!
 //! let d1 = Decimal::new(123456, 2);
 //! let d2 = d1; // d2 is a copy of d1 (also stack-allocated)
@@ -131,7 +150,7 @@ impl Decimal {
     ///
     /// # Examples
     /// ```rust
-    /// # use beaumont::num::{Decimal, Error, MAX_SCALING};
+    /// # use beaumont_numbers::{Decimal, Error, MAX_SCALING};
     /// let d1 = Decimal::try_new(123456, 2);
     /// assert!(d1.is_ok());
     /// assert_eq!(d1.unwrap().to_string(), "1234.56");
@@ -166,3 +185,5 @@ mod scaling;
 // Functions to perform numerical operations on values of the Decimal number type
 mod ops;
 
+// Re-export the beaumont macros
+pub use beaumont_macros::*;
