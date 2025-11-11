@@ -1,0 +1,5 @@
+error: unexpected character '|'
+  --> tests/examples/matrix3.rs:10:21
+   |
+10 |     matrix![ 1 , 2 ,| 3 |
+   |                     ^

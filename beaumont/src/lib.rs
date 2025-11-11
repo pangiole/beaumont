@@ -1,10 +1,10 @@
-#![deny(missing_docs)]
+#![doc = include_str!("../../README.md")]
 
-//! A basic implementation of algorithmic trading for quantitative financial applications.
-//!
-//! <div class="warning">This crate is in an early stage of development and
-//! <strong>not</strong> production ready yet.<br>Use with caution!</div>
-//!
+#[doc(no_inline)]
+pub use beaumont_macros::*;
 
-// Re-export the beaumont names
+#[doc(no_inline)]
 pub use beaumont_numbers::*;
+
+#[doc(no_inline)]
+pub use beaumont_linear_algebra::*;

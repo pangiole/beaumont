@@ -1,0 +1,5 @@
+error: unexpected character '4' (maybe prepending a '|' would fix it)
+  --> tests/examples/matrix5.rs:15:14
+   |
+15 |              4 , 5 , 6 ];
+   |              ^

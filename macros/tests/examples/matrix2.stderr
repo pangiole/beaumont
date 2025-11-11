@@ -1,0 +1,5 @@
+error: unexpected character ','
+  --> tests/examples/matrix2.rs:13:21
+   |
+13 |     matrix![ 1 , 2 ,, 3 |
+   |                     ^

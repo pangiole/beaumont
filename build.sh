@@ -26,13 +26,14 @@ cargo clippy
 
 step "TESTING"
 cargo +stable install cargo-llvm-cov --locked
+cargo +stable install cargo-expand --locked
 cargo clean
 cargo llvm-cov # --text # --html
 
 
 step "BUILDING DOCS "
 cargo test --doc -- --show-output
-RUSTDOCFLAGS="--html-in-header $script_dir/katex.html" cargo doc --verbose
+cargo doc --verbose --no-deps
 
 
 step "BUILDING RELEASE"

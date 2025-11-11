@@ -1,5 +1,5 @@
 [package]
-name = "beaumont"
+name = "beaumont-linear-algebra"
 version.workspace = true
 license.workspace = true
 authors.workspace = true
@@ -15,7 +15,6 @@ exclude = [ ]
 [dependencies]
 beaumont-macros  = { version = "0.1.3", path = "../macros" }
 beaumont-numbers = { version = "0.1.3", path = "../numbers" }
-beaumont-linear-algebra = { version = "0.1.3", path = "../linear-algebra" }
 
 
 [package.metadata.docs.rs]

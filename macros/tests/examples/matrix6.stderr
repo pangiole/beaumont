@@ -1,0 +1,5 @@
+error: unexpected character ',' (columns count mismatch)
+  --> tests/examples/matrix6.rs:15:24
+   |
+15 |            | 4 , 5 , 6 , 7 ];
+   |                        ^

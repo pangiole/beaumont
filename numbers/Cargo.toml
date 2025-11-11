@@ -1,33 +1,20 @@
 [package]
 name = "beaumont-numbers"
-version = "0.1.1"
-license = "WTFPL"
-authors = [
-    "Paolo Angioletti <paolo.angioletti@gmail.com>"
-]
-edition = "2024"
-description = "Algorithmic trading for quantitative financial applications"
-repository = "https://github.com/pangiole/beaumont"
-keywords = [
-    "trading",
-    "finance",
-    "quantitative",
-    "algorithmic",
-    "pricing"
-]
-categories = [
-    "finance",
-    "algorithms",
-    "mathematics"
-]
-exclude = [
-    "src/ops/add.rs",
-    "src/ops/mul.rs"
-]
+version.workspace = true
+license.workspace = true
+authors.workspace = true
+edition.workspace = true
+description.workspace = true
+repository.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+exclude = [ ]
+
 
 [dependencies]
-beaumont-macros = { version = "0.1.1", path = "../macros" }
+beaumont-macros = { version = "0.1.3", path = "../macros" }
+
 
 [package.metadata.docs.rs]
-rustdoc-args = [ "--html-in-header", "../katex.html" ]
-
+rustdoc-args = ["--no-deps"]
