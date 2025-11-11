@@ -3,6 +3,31 @@ resolver = "3"
 members = [
     "macros",
     "numbers",
-    # TODO "linalg"
+    "linear-algebra",
     "beaumont"
 ]
+
+[workspace.package]
+version = "0.1.3"
+license = "WTFPL"
+authors = [
+    "Paolo Angioletti <paolo.angioletti@gmail.com>"
+]
+edition = "2024"
+description = "Algorithmic trading for quantitative financial applications"
+repository = "https://github.com/pangiole/beaumont"
+readme = "../README.md"
+keywords = [
+    "trading",
+    "finance",
+    "quantitative",
+    "algorithmic",
+    "pricing"
+]
+categories = [
+    "finance",
+    "algorithms",
+    "mathematics"
+]
+
+

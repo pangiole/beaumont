@@ -1,8 +1,8 @@
-use crate::{Decimal, Error, RoundingMode};
+use crate::{Decimal, DecimalError, RoundingMode};
 
 impl Decimal {
 
-    /// Check if this decimal number is aligned to another decimal number.
+    /// Return true if this decimal number is aligned to another decimal number.
     ///
     /// Two decimal numbers are considered aligned if they have the same scaling factor. For example,
     /// the decimal number `123.45` is considered to be aligned to `10987.65` because the scaling factors
@@ -22,12 +22,12 @@ impl Decimal {
     /// assert_eq!(d1.is_aligned_to(d2), true);  // both d1 and d2 have scaling factor 2
     /// assert_eq!(d1.is_aligned_to(d3), false); // d3 has scaling factor 3
     /// ```
-    pub fn is_aligned_to(self, that: Decimal) -> bool {
-        self.scaling == that.scaling
+    pub fn is_aligned_to(self, other: Decimal) -> bool {
+        self.scaling == other.scaling
     }
 
 
-    /// Same as th [`Decimal::try_upscale_by`] method, but it panics instead of returning [`Error`]
+    /// Same as th [`Decimal::try_upscale_by`] method, but it panics instead of returning [`DecimalError`]
     pub fn upscale_by(self, amount: u8) -> Self {
         self.try_upscale_by(amount)
             .unwrap_or_else(|err| {
@@ -42,15 +42,15 @@ impl Decimal {
     /// by wrapping the new decimal number aligned to a greater scaling factor, or it returns one of
     /// the following errors:
     ///
-    /// - [`Error::CoefficientOverflow`]<br>
+    /// - [`DecimalError::CoefficientOverflow`]<br>
     ///   If the new coefficient exceeds [`MAX_COEFFICIENT`]
     ///
-    /// - [`Error::ScalingOverflow`]<br>
+    /// - [`DecimalError::ScalingOverflow`]<br>
     ///   If the new scaling factor exceeds [`MAX_SCALING`]
     ///
     /// # Examples
     /// ```rust
-    /// # use beaumont_numbers::{Decimal, Error, MAX_SCALING, RoundingMode};
+    /// # use beaumont_numbers::{Decimal, DecimalError, MAX_SCALING, RoundingMode};
     /// let d = Decimal::new(123591, 3); // Represents "123.591"
     ///
     /// // Happy upscaling (add more trailing zeroes)
@@ -61,17 +61,17 @@ impl Decimal {
     /// // Upscaling error (too many trailing zeroes)
     /// let a2 = d.try_upscale_by(5);
     /// assert!(a2.is_err());
-    /// assert_eq!(matches!(a2.unwrap_err(), Error::CoefficientOverflow), true);
+    /// assert_eq!(matches!(a2.unwrap_err(), DecimalError::CoefficientOverflow), true);
     ///
     /// // Upscaling error (scaling exceeds maximum allowed)
     /// let a3 = d.try_upscale_by(6);
     /// assert!(a3.is_err());
-    /// assert_eq!(matches!(a3.unwrap_err(), Error::CoefficientOverflow), true);
+    /// assert_eq!(matches!(a3.unwrap_err(), DecimalError::CoefficientOverflow), true);
     /// ```
     ///
     /// [`MAX_COEFFICIENT`]: constant.MAX_COEFFICIENT.html
     /// [`MAX_SCALING`]: constant.MAX_SCALING.html
-    pub fn try_upscale_by(self, amount: u8) -> Result<Self, Error> {
+    pub fn try_upscale_by(self, amount: u8) -> Result<Self, DecimalError> {
         // The upscaling scenario consist of simply adding as many trailing zeros as needed.
         // Since we need to execute "checked" operations (because we want to detect overflows),
         // and since those operations return an Option<i32> envelope, we'd be better off at
@@ -98,7 +98,7 @@ impl Decimal {
                 // No need to invoke try_new() because we already ruled out the ScalingOverflow possibility
                 Decimal::new(new_coefficient, new_scaling)
             )
-            .ok_or(Error::CoefficientOverflow)
+            .ok_or(DecimalError::CoefficientOverflow)
     }
 
 
@@ -109,7 +109,7 @@ impl Decimal {
     ///
     /// # Examples
     /// ```rust
-    /// # use beaumont_numbers::{Decimal, Error, MAX_SCALING, RoundingMode};
+    /// # use beaumont_numbers::{Decimal, DecimalError, MAX_SCALING, RoundingMode};
     /// let d1 = Decimal::new(123591, 3); // Represents "123.591"
     /// let rm = RoundingMode::HalfUp;
     ///

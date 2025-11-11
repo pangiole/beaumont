@@ -1,0 +1,5 @@
+error: unexpected character ','
+  --> tests/examples/vector2.rs:12:22
+   |
+12 |     vector![1.0, 2.0,, 3.0];
+   |                      ^

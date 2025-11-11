@@ -1,4 +1,4 @@
-use super::{Decimal, Error};
+use super::{Decimal, DecimalError};
 use std::str::FromStr;
 
 
@@ -24,14 +24,14 @@ impl From<&str> for Decimal {
 
 
 impl FromStr for Decimal {
-    type Err = Error;
+    type Err = DecimalError;
 
     // TODO Implement the ability to create a decimal number from scientific notation (such as 1.234e5)
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let len = s.len();
         if len == 0 {
-            return Err(Error::BadFormat("Empty string"));
+            return Err(DecimalError::BadFormat("Empty string"));
         }
 
         let chars = s.as_bytes();
@@ -39,20 +39,20 @@ impl FromStr for Decimal {
         let mut accumulated_scaling: u8 = 0;
         let mut minus_encountered = false;
         let mut dot_encountered = false;
-        let mut maybe_error: Option<Error> = None;
+        let mut maybe_error: Option<DecimalError> = None;
 
         for (i, c) in chars.iter().enumerate().take(len) {
 
             // 43 is the ASCII code for the character '+'
             // and it is allowed only once (at the beginning of the given string)
             if *c == 43 && i > 0 {
-                maybe_error = Some(Error::BadFormat("Misplaced + (plus)")); break;
+                maybe_error = Some(DecimalError::BadFormat("Misplaced + (plus)")); break;
             }
 
             // 45 is the ASCII code for the character '-'
             else if *c == 45 {
                 if i > 0 {
-                    maybe_error = Some(Error::BadFormat("Misplaced - (minus)")); break;
+                    maybe_error = Some(DecimalError::BadFormat("Misplaced - (minus)")); break;
                 }
                 minus_encountered = true;
             }
@@ -61,7 +61,7 @@ impl FromStr for Decimal {
             else if *c == 46 {
                 if dot_encountered {
                     // double dot encountered!
-                    maybe_error = Some(Error::BadFormat("Double . (dot)"));
+                    maybe_error = Some(DecimalError::BadFormat("Double . (dot)"));
                     break;
                 }
                 dot_encountered = true;
@@ -92,13 +92,13 @@ impl FromStr for Decimal {
                     }
                 }
                 else {
-                    maybe_error = Some(Error::CoefficientOverflow);
+                    maybe_error = Some(DecimalError::CoefficientOverflow);
                     break;
                 }
             }
 
             else {
-                maybe_error = Some(Error::BadFormat("Invalid character"));
+                maybe_error = Some(DecimalError::BadFormat("Invalid character"));
                 break;
             }
         }
@@ -218,42 +218,42 @@ mod test {
     fn from_str_empty_err() {
         let res = Decimal::from_str("");
         assert!(res.is_err());
-        assert!(matches!(res.err().unwrap(), Error::BadFormat("Empty string")));
+        assert!(matches!(res.err().unwrap(), DecimalError::BadFormat("Empty string")));
     }
 
     #[test]
     fn from_str_invalid_char_err() {
         let res = Decimal::from_str("1.?34");
         assert!(res.is_err());
-        assert!(matches!(res.err().unwrap(), Error::BadFormat("Invalid character")));
+        assert!(matches!(res.err().unwrap(), DecimalError::BadFormat("Invalid character")));
     }
 
     #[test]
     fn from_str_misplaced_plus_sign_err() {
         let res = Decimal::from_str("1.+34");
         assert!(res.is_err());
-        assert!(matches!(res.err().unwrap(), Error::BadFormat("Misplaced + (plus)")));
+        assert!(matches!(res.err().unwrap(), DecimalError::BadFormat("Misplaced + (plus)")));
     }
 
     #[test]
     fn from_str_misplaced_minus_sign_err() {
         let res = Decimal::from_str("1.34-");
         assert!(res.is_err());
-        assert!(matches!(res.err().unwrap(), Error::BadFormat("Misplaced - (minus)")));
+        assert!(matches!(res.err().unwrap(), DecimalError::BadFormat("Misplaced - (minus)")));
     }
 
     #[test]
     fn from_str_double_dot_err() {
         let res = Decimal::from_str("1.234.56");
         assert!(res.is_err());
-        assert!(matches!(res.err().unwrap(), Error::BadFormat("Double . (dot)")));
+        assert!(matches!(res.err().unwrap(), DecimalError::BadFormat("Double . (dot)")));
     }
 
     #[test]
     fn from_str_exceeds_max_scale_err() {
         let res = Decimal::from_str("1.234567890");
         assert!(res.is_err());
-        assert!(matches!(res.err().unwrap(), Error::ScalingOverflow));
+        assert!(matches!(res.err().unwrap(), DecimalError::ScalingOverflow));
     }
 
     #[test]
@@ -262,6 +262,6 @@ mod test {
         // and that we want to represent 2147483648
         let res = Decimal::from_str("2147483648");
         assert!(res.is_err());
-        assert!(matches!(res.err().unwrap(), Error::CoefficientOverflow));
+        assert!(matches!(res.err().unwrap(), DecimalError::CoefficientOverflow));
     }
 }

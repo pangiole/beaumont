@@ -1,5 +1,5 @@
 [package]
-name = "beaumont-numbers"
+name = "beaumont-linear-algebra"
 version.workspace = true
 license.workspace = true
 authors.workspace = true
@@ -13,5 +13,7 @@ exclude = [ ]
 
 
 [dependencies]
-beaumont-macros = { version = "0.1.2", path = "../macros" }
+beaumont-macros  = { version = "0.1.2", path = "../macros" }
+beaumont-numbers = { version = "0.1.2", path = "../numbers" }
 katexit = "0.1.5"
+

@@ -23,7 +23,7 @@ impl fmt::Display for Decimal {
     //
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         /*
-         * The elements of the following array are the digit characters representing the ones for the first
+         * The components of the following array are the digit characters representing the ones for the first
          * 100 integers (from 0 to 99). Therefore, to answer the _"How many ones in 45?"_ question, just
          * read this array at index 45 and you'll get the character '5'. Similarly, the element at index 96
          * will be the character '6'.
@@ -51,7 +51,7 @@ impl fmt::Display for Decimal {
         }
 
         /*
-         * Similarly to the above array, the elements of the following array are the digit characters
+         * Similarly to the above array, the components of the following array are the digit characters
          * representing the tens for the first 100 integers (from 0 to 99). Therefore, to answer the
          * _"How many tens in 45?"_ question, just read this array at index 45 and read the character '4'.
          *  Similarly, the element at index 96 will be the character '9'.
@@ -184,6 +184,7 @@ impl fmt::Display for Decimal {
         f.write_str(representation)
     }
 }
+
 
 #[cfg(test)]
 mod test {
